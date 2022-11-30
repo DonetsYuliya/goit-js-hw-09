@@ -10,10 +10,6 @@ const minuteEl = document.querySelector('span[data-minutes]');
 const secondEl = document.querySelector('span[data-seconds]');
 
 let userDate = null;
-const date = new Date();
-let ms = 0;
-let timerId = null;
-let times = {};
 
 const options = {
   enableTime: true,
@@ -37,7 +33,7 @@ const choiceDate = flatpickr('input#datetime-picker', options);
 startEl.addEventListener('click', getMilliseconds);
 
 function getMilliseconds() {
-  ms = userDate.getTime() - date.getTime();
+  let ms = userDate.getTime() - new Date().getTime();
 
   ms = startTime(ms);
 }
@@ -67,20 +63,24 @@ function addLeadingZero(value) {
 }
 
 function startTime(ms) {
-  timerId = setInterval(() => {
+  const timerId = setInterval(() => {
     ms -= 1000;
     if (ms < 1000) clearInterval(timerId);
 
-    times = convertMs(ms);
-
-    for (let value in times) {
-      const newValue = addLeadingZero(times[value]);
-      times[value] = newValue;
-
-      dayEl.textContent = times.days;
-      hourEl.textContent = times.hours;
-      minuteEl.textContent = times.minutes;
-      secondEl.textContent = times.seconds;
-    }
+    setData(ms);
   }, 1000);
+}
+
+function setData(ms) {
+  const times = convertMs(ms);
+
+  for (let value in times) {
+    const newValue = addLeadingZero(times[value]);
+    times[value] = newValue;
+
+    dayEl.textContent = times.days;
+    hourEl.textContent = times.hours;
+    minuteEl.textContent = times.minutes;
+    secondEl.textContent = times.seconds;
+  }
 }
