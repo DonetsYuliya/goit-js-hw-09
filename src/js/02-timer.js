@@ -32,7 +32,7 @@ const options = {
   },
 };
 
-const choiceDate = new flatpickr('input#datetime-picker', options);
+const choiceDate = flatpickr('input#datetime-picker', options);
 
 startEl.addEventListener('click', getMilliseconds);
 
