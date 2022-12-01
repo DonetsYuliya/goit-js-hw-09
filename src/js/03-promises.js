@@ -12,18 +12,19 @@ function handleSubmit(event) {
     elements: { delay, step, amount },
   } = event.currentTarget;
 
-  const delayValue = Number(delay.value);
+  let delayValue = Number(delay.value);
   const stepValue = Number(step.value);
   const amountValue = Number(amount.value);
 
   for (let i = 0; i <= amountValue; i += 1) {
-    position = i;
-    if (i === 1) {
-      delay = delayValue;
-    } else {
-      delay = delayValue + stepValue;
-    }
-    return { position, delay };
+    createPromise(i + 1, delayValue)
+      .then(({ position, delay }) => {
+        Notify.success(`✅ Fulfilled promise ${position} in ${delay}ms`);
+      })
+      .catch(({ position, delay }) => {
+        Notify.failure(`❌ Rejected promise ${position} in ${delay}ms`);
+      });
+    delayValue += stepValue;
   }
 }
 
@@ -39,11 +40,3 @@ function createPromise(position, delay) {
     }, delay);
   });
 }
-
-createPromise(2, 1500)
-  .then(({ position, delay }) => {
-    Notify.success(`✅ Fulfilled promise ${position} in ${delay}ms`);
-  })
-  .catch(({ position, delay }) => {
-    Notify.failure(`❌ Rejected promise ${position} in ${delay}ms`);
-  });
